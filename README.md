@@ -1,17 +1,3 @@
-# **Datasprint Technical Test**
-#### Antonio Esteves
-
-# **Data**
-
-Download data from the​ NYC Taxi Trips​ database and put them into **/data** folder:
-
-| Dataset  | Description   |
-|---|---|
-|  Trips ([1](https://s3.amazonaws.com/data-sprints-eng-test/data-sample_data-nyctaxi-trips-2009-json_corrigido.json), [2](https://s3.amazonaws.com/data-sprints-eng-test/data-sample_data-nyctaxi-trips-2010-json_corrigido.json), [3](https://s3.amazonaws.com/data-sprints-eng-test/data-sample_data-nyctaxi-trips-2011-json_corrigido.json) e [4](https://s3.amazonaws.com/data-sprints-eng-test/data-sample_data-nyctaxi-trips-2012-json_corrigido.json)) | Taxi Trips data in New York City.  |
-|  [Vendor Lookup](https://s3.amazonaws.com/data-sprints-eng-test/data-vendor_lookup-csv.csv) |  Taxi Service Company Data |
-|   [Payment Lookup](https://s3.amazonaws.com/data-sprints-eng-test/data-payment_lookup-csv.csv)|  Map between prefixes and actual payment types |
-
-
 
 #  **Load Libraries**
 
@@ -23,7 +9,7 @@ import pandas as pd
 import descartes
 import geopandas as gpd
 from shapely.geometry import Point, Polygon
-import seaborn as sns;
+import seaborn as sns; 
 sns.set(style="whitegrid")
 import warnings
 warnings.filterwarnings("ignore")
@@ -295,23 +281,692 @@ taxi_trips.head()
 
 
 ```python
-# corr = data.corr(method='spearman')
-# mask = np.zeros_like(corr)
-# mask[np.triu_indices_from(mask)] = True
-# fig, ax = plt.subplots()
-# ax.figure.set_size_inches(15, 15)
-# sns.heatmap(corr, ax=ax, annot=True,  mask=mask, fmt='.2f', cbar=False, square=True, cmap=plt.cm.Blues, center=0)
+corr = taxi_trips.corr(method='spearman')
+mask = np.zeros_like(corr)
+mask[np.triu_indices_from(mask)] = True
+fig, ax = plt.subplots()
+ax.figure.set_size_inches(15, 15)
+sns.heatmap(corr, ax=ax, annot=True,  mask=mask, fmt='.2f', cbar=False, square=True, cmap=plt.cm.Blues, center=0)
 ```
+
+
+
+
+    <matplotlib.axes._subplots.AxesSubplot at 0x225f58d68>
+
+
+
+
+![png](output_21_1.png)
+
 
 
 ```python
-# corr.style.background_gradient().set_precision(2).set_properties(**{'font-size': '8pt'})
+corr.style.background_gradient().set_precision(2).set_properties(**{'font-size': '8pt'})
 ```
+
+
+
+
+<style  type="text/css" >
+    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row0_col0 {
+            background-color:  #023858;
+            color:  #f1f1f1;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row0_col1 {
+            background-color:  #f2ecf5;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row0_col2 {
+            background-color:  #fdf5fa;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row0_col3 {
+            background-color:  #f7f0f7;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row0_col4 {
+            background-color:  #fff7fb;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row0_col5 {
+            background-color:  #f5eff6;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row0_col6 {
+            background-color:  #f2ecf5;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row0_col7 {
+            background-color:  #e5e1ef;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row0_col8 {
+            background-color:  #fef6fb;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row0_col9 {
+            background-color:  #f8f1f8;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row0_col10 {
+            background-color:  #f1ebf4;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row1_col0 {
+            background-color:  #f6eff7;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row1_col1 {
+            background-color:  #023858;
+            color:  #f1f1f1;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row1_col2 {
+            background-color:  #f4edf6;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row1_col3 {
+            background-color:  #fdf5fa;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row1_col4 {
+            background-color:  #eae6f1;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row1_col5 {
+            background-color:  #fcf4fa;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row1_col6 {
+            background-color:  #034973;
+            color:  #f1f1f1;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row1_col7 {
+            background-color:  #f5eff6;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row1_col8 {
+            background-color:  #dddbec;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row1_col9 {
+            background-color:  #c6cce3;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row1_col10 {
+            background-color:  #034d79;
+            color:  #f1f1f1;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row2_col0 {
+            background-color:  #fef6fb;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row2_col1 {
+            background-color:  #f1ebf5;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row2_col2 {
+            background-color:  #023858;
+            color:  #f1f1f1;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row2_col3 {
+            background-color:  #509ac6;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row2_col4 {
+            background-color:  #8fb4d6;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row2_col5 {
+            background-color:  #c0c9e2;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row2_col6 {
+            background-color:  #f0eaf4;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row2_col7 {
+            background-color:  #fff7fb;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row2_col8 {
+            background-color:  #fcf4fa;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row2_col9 {
+            background-color:  #e3e0ee;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row2_col10 {
+            background-color:  #f0eaf4;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row3_col0 {
+            background-color:  #fcf4fa;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row3_col1 {
+            background-color:  #fff7fb;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row3_col2 {
+            background-color:  #569dc8;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row3_col3 {
+            background-color:  #023858;
+            color:  #f1f1f1;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row3_col4 {
+            background-color:  #d2d3e7;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row3_col5 {
+            background-color:  #5c9fc9;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row3_col6 {
+            background-color:  #fff7fb;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row3_col7 {
+            background-color:  #fdf5fa;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row3_col8 {
+            background-color:  #fff7fb;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row3_col9 {
+            background-color:  #f7f0f7;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row3_col10 {
+            background-color:  #fff7fb;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row4_col0 {
+            background-color:  #fdf5fa;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row4_col1 {
+            background-color:  #e2dfee;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row4_col2 {
+            background-color:  #8bb2d4;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row4_col3 {
+            background-color:  #c6cce3;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row4_col4 {
+            background-color:  #023858;
+            color:  #f1f1f1;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row4_col5 {
+            background-color:  #63a2cb;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row4_col6 {
+            background-color:  #e3e0ee;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row4_col7 {
+            background-color:  #faf2f8;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row4_col8 {
+            background-color:  #fbf4f9;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row4_col9 {
+            background-color:  #e9e5f1;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row4_col10 {
+            background-color:  #e4e1ef;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row5_col0 {
+            background-color:  #fbf4f9;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row5_col1 {
+            background-color:  #fef6fb;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row5_col2 {
+            background-color:  #c8cde4;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row5_col3 {
+            background-color:  #5c9fc9;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row5_col4 {
+            background-color:  #71a8ce;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row5_col5 {
+            background-color:  #023858;
+            color:  #f1f1f1;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row5_col6 {
+            background-color:  #fff7fb;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row5_col7 {
+            background-color:  #fbf3f9;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row5_col8 {
+            background-color:  #fff7fb;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row5_col9 {
+            background-color:  #f9f2f8;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row5_col10 {
+            background-color:  #fff7fb;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row6_col0 {
+            background-color:  #f8f1f8;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row6_col1 {
+            background-color:  #034973;
+            color:  #f1f1f1;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row6_col2 {
+            background-color:  #f4edf6;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row6_col3 {
+            background-color:  #fef6fb;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row6_col4 {
+            background-color:  #ede8f3;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row6_col5 {
+            background-color:  #fef6fb;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row6_col6 {
+            background-color:  #023858;
+            color:  #f1f1f1;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row6_col7 {
+            background-color:  #fdf5fa;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row6_col8 {
+            background-color:  #dad9ea;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row6_col9 {
+            background-color:  #c2cbe2;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row6_col10 {
+            background-color:  #023d60;
+            color:  #f1f1f1;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row7_col0 {
+            background-color:  #e7e3f0;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row7_col1 {
+            background-color:  #f3edf5;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row7_col2 {
+            background-color:  #fff7fb;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row7_col3 {
+            background-color:  #f8f1f8;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row7_col4 {
+            background-color:  #fdf5fa;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row7_col5 {
+            background-color:  #f5eff6;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row7_col6 {
+            background-color:  #f9f2f8;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row7_col7 {
+            background-color:  #023858;
+            color:  #f1f1f1;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row7_col8 {
+            background-color:  #f5eff6;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row7_col9 {
+            background-color:  #fff7fb;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row7_col10 {
+            background-color:  #e9e5f1;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row8_col0 {
+            background-color:  #fff7fb;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row8_col1 {
+            background-color:  #d9d8ea;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row8_col2 {
+            background-color:  #fcf4fa;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row8_col3 {
+            background-color:  #faf3f9;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row8_col4 {
+            background-color:  #fef6fb;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row8_col5 {
+            background-color:  #faf3f9;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row8_col6 {
+            background-color:  #d4d4e8;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row8_col7 {
+            background-color:  #f5eef6;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row8_col8 {
+            background-color:  #023858;
+            color:  #f1f1f1;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row8_col9 {
+            background-color:  #ede7f2;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row8_col10 {
+            background-color:  #abbfdc;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row9_col0 {
+            background-color:  #f8f1f8;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row9_col1 {
+            background-color:  #c1cae2;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row9_col2 {
+            background-color:  #e2dfee;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row9_col3 {
+            background-color:  #f2ecf5;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row9_col4 {
+            background-color:  #ede7f2;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row9_col5 {
+            background-color:  #f3edf5;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row9_col6 {
+            background-color:  #bbc7e0;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row9_col7 {
+            background-color:  #fff7fb;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row9_col8 {
+            background-color:  #ede7f2;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row9_col9 {
+            background-color:  #023858;
+            color:  #f1f1f1;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row9_col10 {
+            background-color:  #b7c5df;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row10_col0 {
+            background-color:  #f7f0f7;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row10_col1 {
+            background-color:  #034d79;
+            color:  #f1f1f1;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row10_col2 {
+            background-color:  #f4eef6;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row10_col3 {
+            background-color:  #fff7fb;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row10_col4 {
+            background-color:  #eee8f3;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row10_col5 {
+            background-color:  #fff7fb;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row10_col6 {
+            background-color:  #023d60;
+            color:  #f1f1f1;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row10_col7 {
+            background-color:  #efe9f3;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row10_col8 {
+            background-color:  #b3c3de;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row10_col9 {
+            background-color:  #c0c9e2;
+            color:  #000000;
+            font-size:  8pt;
+        }    #T_0be8e60a_368f_11ea_a986_0c4de9ace366row10_col10 {
+            background-color:  #023858;
+            color:  #f1f1f1;
+            font-size:  8pt;
+        }</style><table id="T_0be8e60a_368f_11ea_a986_0c4de9ace366" ><thead>    <tr>        <th class="blank level0" ></th>        <th class="col_heading level0 col0" >passenger_count</th>        <th class="col_heading level0 col1" >trip_distance</th>        <th class="col_heading level0 col2" >pickup_longitude</th>        <th class="col_heading level0 col3" >pickup_latitude</th>        <th class="col_heading level0 col4" >dropoff_longitude</th>        <th class="col_heading level0 col5" >dropoff_latitude</th>        <th class="col_heading level0 col6" >fare_amount</th>        <th class="col_heading level0 col7" >surcharge</th>        <th class="col_heading level0 col8" >tip_amount</th>        <th class="col_heading level0 col9" >tolls_amount</th>        <th class="col_heading level0 col10" >total_amount</th>    </tr></thead><tbody>
+                <tr>
+                        <th id="T_0be8e60a_368f_11ea_a986_0c4de9ace366level0_row0" class="row_heading level0 row0" >passenger_count</th>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row0_col0" class="data row0 col0" >1</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row0_col1" class="data row0 col1" >0.031</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row0_col2" class="data row0 col2" >-0.024</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row0_col3" class="data row0 col3" >-0.011</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row0_col4" class="data row0 col4" >-0.019</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row0_col5" class="data row0 col5" >-0.0066</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row0_col6" class="data row0 col6" >0.02</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row0_col7" class="data row0 col7" >0.12</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row0_col8" class="data row0 col8" >-0.032</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row0_col9" class="data row0 col9" >0.015</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row0_col10" class="data row0 col10" >0.027</td>
+            </tr>
+            <tr>
+                        <th id="T_0be8e60a_368f_11ea_a986_0c4de9ace366level0_row1" class="row_heading level0 row1" >trip_distance</th>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row1_col0" class="data row1 col0" >0.031</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row1_col1" class="data row1 col1" >1</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row1_col2" class="data row1 col2" >0.038</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row1_col3" class="data row1 col3" >-0.061</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row1_col4" class="data row1 col4" >0.12</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row1_col5" class="data row1 col5" >-0.055</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row1_col6" class="data row1 col6" >0.93</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row1_col7" class="data row1 col7" >0.026</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row1_col8" class="data row1 col8" >0.16</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row1_col9" class="data row1 col9" >0.25</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row1_col10" class="data row1 col10" >0.92</td>
+            </tr>
+            <tr>
+                        <th id="T_0be8e60a_368f_11ea_a986_0c4de9ace366level0_row2" class="row_heading level0 row2" >pickup_longitude</th>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row2_col0" class="data row2 col0" >-0.024</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row2_col1" class="data row2 col1" >0.038</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row2_col2" class="data row2 col2" >1</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row2_col3" class="data row2 col3" >0.54</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row2_col4" class="data row2 col4" >0.42</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row2_col5" class="data row2 col5" >0.25</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row2_col6" class="data row2 col6" >0.039</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row2_col7" class="data row2 col7" >-0.04</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row2_col8" class="data row2 col8" >-0.016</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row2_col9" class="data row2 col9" >0.14</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row2_col10" class="data row2 col10" >0.033</td>
+            </tr>
+            <tr>
+                        <th id="T_0be8e60a_368f_11ea_a986_0c4de9ace366level0_row3" class="row_heading level0 row3" >pickup_latitude</th>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row3_col0" class="data row3 col0" >-0.011</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row3_col1" class="data row3 col1" >-0.061</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row3_col2" class="data row3 col2" >0.54</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row3_col3" class="data row3 col3" >1</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row3_col4" class="data row3 col4" >0.23</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row3_col5" class="data row3 col5" >0.51</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row3_col6" class="data row3 col6" >-0.069</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row3_col7" class="data row3 col7" >-0.025</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row3_col8" class="data row3 col8" >-0.038</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row3_col9" class="data row3 col9" >0.021</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row3_col10" class="data row3 col10" >-0.074</td>
+            </tr>
+            <tr>
+                        <th id="T_0be8e60a_368f_11ea_a986_0c4de9ace366level0_row4" class="row_heading level0 row4" >dropoff_longitude</th>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row4_col0" class="data row4 col0" >-0.019</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row4_col1" class="data row4 col1" >0.12</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row4_col2" class="data row4 col2" >0.42</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row4_col3" class="data row4 col3" >0.23</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row4_col4" class="data row4 col4" >1</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row4_col5" class="data row4 col5" >0.5</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row4_col6" class="data row4 col6" >0.1</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row4_col7" class="data row4 col7" >-0.0025</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row4_col8" class="data row4 col8" >-0.014</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row4_col9" class="data row4 col9" >0.11</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row4_col10" class="data row4 col10" >0.099</td>
+            </tr>
+            <tr>
+                        <th id="T_0be8e60a_368f_11ea_a986_0c4de9ace366level0_row5" class="row_heading level0 row5" >dropoff_latitude</th>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row5_col0" class="data row5 col0" >-0.0066</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row5_col1" class="data row5 col1" >-0.055</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row5_col2" class="data row5 col2" >0.25</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row5_col3" class="data row5 col3" >0.51</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row5_col4" class="data row5 col4" >0.5</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row5_col5" class="data row5 col5" >1</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row5_col6" class="data row5 col6" >-0.072</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row5_col7" class="data row5 col7" >-0.0081</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row5_col8" class="data row5 col8" >-0.04</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row5_col9" class="data row5 col9" >0.0078</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row5_col10" class="data row5 col10" >-0.077</td>
+            </tr>
+            <tr>
+                        <th id="T_0be8e60a_368f_11ea_a986_0c4de9ace366level0_row6" class="row_heading level0 row6" >fare_amount</th>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row6_col0" class="data row6 col0" >0.02</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row6_col1" class="data row6 col1" >0.93</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row6_col2" class="data row6 col2" >0.039</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row6_col3" class="data row6 col3" >-0.069</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row6_col4" class="data row6 col4" >0.1</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row6_col5" class="data row6 col5" >-0.072</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row6_col6" class="data row6 col6" >1</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row6_col7" class="data row6 col7" >-0.028</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row6_col8" class="data row6 col8" >0.18</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row6_col9" class="data row6 col9" >0.26</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row6_col10" class="data row6 col10" >0.98</td>
+            </tr>
+            <tr>
+                        <th id="T_0be8e60a_368f_11ea_a986_0c4de9ace366level0_row7" class="row_heading level0 row7" >surcharge</th>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row7_col0" class="data row7 col0" >0.12</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row7_col1" class="data row7 col1" >0.026</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row7_col2" class="data row7 col2" >-0.04</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row7_col3" class="data row7 col3" >-0.025</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row7_col4" class="data row7 col4" >-0.0025</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row7_col5" class="data row7 col5" >-0.0081</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row7_col6" class="data row7 col6" >-0.028</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row7_col7" class="data row7 col7" >1</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row7_col8" class="data row7 col8" >0.029</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row7_col9" class="data row7 col9" >-0.036</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row7_col10" class="data row7 col10" >0.072</td>
+            </tr>
+            <tr>
+                        <th id="T_0be8e60a_368f_11ea_a986_0c4de9ace366level0_row8" class="row_heading level0 row8" >tip_amount</th>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row8_col0" class="data row8 col0" >-0.032</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row8_col1" class="data row8 col1" >0.16</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row8_col2" class="data row8 col2" >-0.016</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row8_col3" class="data row8 col3" >-0.038</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row8_col4" class="data row8 col4" >-0.014</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row8_col5" class="data row8 col5" >-0.04</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row8_col6" class="data row8 col6" >0.18</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row8_col7" class="data row8 col7" >0.029</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row8_col8" class="data row8 col8" >1</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row8_col9" class="data row8 col9" >0.09</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row8_col10" class="data row8 col10" >0.31</td>
+            </tr>
+            <tr>
+                        <th id="T_0be8e60a_368f_11ea_a986_0c4de9ace366level0_row9" class="row_heading level0 row9" >tolls_amount</th>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row9_col0" class="data row9 col0" >0.015</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row9_col1" class="data row9 col1" >0.25</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row9_col2" class="data row9 col2" >0.14</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row9_col3" class="data row9 col3" >0.021</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row9_col4" class="data row9 col4" >0.11</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row9_col5" class="data row9 col5" >0.0078</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row9_col6" class="data row9 col6" >0.26</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row9_col7" class="data row9 col7" >-0.036</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row9_col8" class="data row9 col8" >0.09</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row9_col9" class="data row9 col9" >1</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row9_col10" class="data row9 col10" >0.27</td>
+            </tr>
+            <tr>
+                        <th id="T_0be8e60a_368f_11ea_a986_0c4de9ace366level0_row10" class="row_heading level0 row10" >total_amount</th>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row10_col0" class="data row10 col0" >0.027</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row10_col1" class="data row10 col1" >0.92</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row10_col2" class="data row10 col2" >0.033</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row10_col3" class="data row10 col3" >-0.074</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row10_col4" class="data row10 col4" >0.099</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row10_col5" class="data row10 col5" >-0.077</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row10_col6" class="data row10 col6" >0.98</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row10_col7" class="data row10 col7" >0.072</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row10_col8" class="data row10 col8" >0.31</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row10_col9" class="data row10 col9" >0.27</td>
+                        <td id="T_0be8e60a_368f_11ea_a986_0c4de9ace366row10_col10" class="data row10 col10" >1</td>
+            </tr>
+    </tbody></table>
+
+
 
 
 ```python
-# sns.pairplot(data, plot_kws = {'alpha': 0.5})
+sns.pairplot(taxi_trips, plot_kws = {'alpha': 0.5})
 ```
+
+
+
+
+    <seaborn.axisgrid.PairGrid at 0x2233641d0>
+
+
+
+
+![png](output_23_1.png)
+
 
 ## **Feature Extraction**
 
@@ -320,7 +975,7 @@ taxi_trips.head()
 
 ```python
 taxi_trips['payment_type'] = taxi_trips['payment_type'].str.upper()
-taxi_trips['vendor_id'] = taxi_trips['vendor_id'].str.upper()
+taxi_trips['vendor_id'] = taxi_trips['vendor_id'].str.upper() 
 ```
 
 ### **Extract Dates**
@@ -1065,7 +1720,7 @@ sns.FacetGrid(df_cash_paid_hist, col="year").map(plt.hist, "payment_type_count")
 
 
 
-    <seaborn.axisgrid.FacetGrid at 0x1edc7d3c8>
+    <seaborn.axisgrid.FacetGrid at 0x1e10006a0>
 
 
 
@@ -1605,3 +2260,4 @@ plt.ylabel("Trip Duration Average (h)")
 
 
 ![png](output_67_1.png)
+
